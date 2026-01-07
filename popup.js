@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const btn = document.getElementById('btn-clean');
     const statusDiv = document.getElementById('status');
     const skipInput = document.getElementById('skipCount');
@@ -13,17 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    if (!tab || !tab.url.includes('chatgpt.com')) {
+        statusDiv.innerText = '❌ Go to chatgpt.com first!';
+        statusDiv.style.color = 'red';
+        return;
+    }
+
+    chrome.tabs.sendMessage(tab.id, { action: 'check_status' }, (response) => {
+        if (!chrome.runtime.lastError && response) {
+            updateButtonState(response.isRunning);
+            if (response.isRunning) {
+                statusDiv.innerText = "Running in background...";
+                statusDiv.style.color = "green";
+            }
+        }
+    });
+
     btn.addEventListener('click', async () => {
         const skipAmount = skipInput.value;
-
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-        if (!tab.url.includes('chatgpt.com')) {
-            statusDiv.innerText = '❌ Go to chatgpt.com first!';
-            statusDiv.style.color = 'red';
-            return;
-        }
-
         statusDiv.innerText = 'Sending command...';
 
         chrome.tabs.sendMessage(tab.id, { 
