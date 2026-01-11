@@ -18,9 +18,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isChatGPT = tab.url.includes('chatgpt.com');
     const isGemini = tab.url.includes('gemini.google.com');
     const isClaude = tab.url.includes('claude.ai');
+    const isDeepseek = tab.url.includes('chat.deepseek.com');
 
-    if (!isChatGPT && !isGemini && !isClaude) {
-        statusDiv.innerText = 'This extension only works on ChatGPT, Gemini, or Claude pages.';
+    if (!isChatGPT && !isGemini && !isClaude && !isDeepseek) {
+        statusDiv.innerText = 'This extension only works on ChatGPT, Gemini, Claude, or Deepseek pages.';
         statusDiv.style.color = 'red';
         btn.disabled = true;
         return;

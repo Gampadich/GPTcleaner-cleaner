@@ -341,6 +341,71 @@ async function deleteClaudeAI(safeZoneCount) {
   }
 }
 
+async function deleteDeepSeek(safeZoneCount) {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const allChats = document.querySelectorAll("a");
+  console.log(`Found ${allChats.length} chats`);
+
+  const targetChat = allChats[safeZoneCount];
+
+  if (!targetChat) return "LIMIT_REACHED";
+
+  targetChat.style.border = "3px solid red";
+
+  targetChat.click();
+
+  await sleep(800);
+
+  const allButtons = document.querySelectorAll(".ds-icon-button__hover-bg");
+  const menuButton = allButtons[1];
+
+  if (menuButton) {
+    menuButton.style.border = "3px solid red";
+    menuButton.click();
+  } else {
+    return console.log("Menu button not found");
+  }
+
+  await sleep(800);
+
+  const menuButtons = document.querySelectorAll(".ds-dropdown-menu-option");
+  let deleteButton = null;
+
+  for (let i = 0; i < menuButtons.length; i++) {
+    const text = menuButtons[i].innerText.toLowerCase();
+    if (
+      text.includes("delete") ||
+      text.includes("видалити") ||
+      text.includes("удалить")
+    ) {
+      deleteButton = menuButtons[i];
+      break;
+    }
+  }
+
+  if (deleteButton) {
+    deleteButton.style.border = "3px solid red";
+    deleteButton.click();
+  } else {
+    return console.log("Delete button not found");
+  }
+
+  await sleep(800);
+
+  const confirmButtons = document.querySelectorAll("button");
+  const confirmButton = confirmButtons[1];
+
+  if (confirmButton) {
+    confirmButton.click();
+    console.log("Chat deleted successfully");
+  } else {
+    return console.log("Confirm button not found");
+  }
+
+  return true;
+}
+
 async function startMassDeletion(safeZoneCount) {
   isRunning = true;
   const hostname = window.location.hostname;
@@ -355,6 +420,8 @@ async function startMassDeletion(safeZoneCount) {
       result = await deleteGemini(safeZoneCount);
     } else if (hostname.includes("claude.ai")) {
       result = await deleteClaudeAI(safeZoneCount);
+    } else if (hostname.includes("deepseek")) {
+      result = await deleteDeepSeek(safeZoneCount);
     } else {
       console.log("Unknown page!");
       isRunning = false;
