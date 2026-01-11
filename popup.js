@@ -16,10 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
     const isChatGPT = tab.url.includes('chatgpt.com');
-    const isGemini = tab.url.includes('gemini.google.com')
+    const isGemini = tab.url.includes('gemini.google.com');
+    const isClaude = tab.url.includes('claude.ai');
 
-    if (!isChatGPT && !isGemini) {
-        statusDiv.innerText = 'This extension only works on ChatGPT or Gemini pages.';
+    if (!isChatGPT && !isGemini && !isClaude) {
+        statusDiv.innerText = 'This extension only works on ChatGPT, Gemini, or Claude pages.';
         statusDiv.style.color = 'red';
         btn.disabled = true;
         return;
