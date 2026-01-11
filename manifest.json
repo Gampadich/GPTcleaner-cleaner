@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "GPT Smart Cleaner",
+  "name": "AI Smart Cleaner",
   "version": "1.0",
   "description": "Delete old AI chats",
   "permissions": ["activeTab", "scripting"],
