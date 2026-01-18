@@ -1,108 +1,82 @@
-# 🧹 AI Chat Mass Deleter (Chrome Extension)
+# 🧹 AI Chat Mass Purger (Chrome Extension)
 
-A browser automation script to mass-delete chat history from popular AI platforms. It automates clearing conversations from ChatGPT, Google Gemini, Claude AI, and DeepSeek.
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://developer.chrome.com/docs/extensions)
 
----
-
-## 🚀 Features
-
-- Multi-platform support:
-  - OpenAI ChatGPT
-  - Google Gemini
-  - Claude AI
-  - DeepSeek
-- Configurable "Safe Zone" to protect pinned or recent chats.
-- Intelligent DOM navigation to find menus, delete actions, and confirmation dialogs.
-- Visual feedback: highlights elements before clicking so you can watch what the script does.
-- Toggle control: start/stop remotely via extension messages.
+> **Effortlessly clear your AI chat history with one click.** Automates mass-deletion on ChatGPT, Google Gemini, Claude AI, and DeepSeek using human-like UI interaction.
 
 ---
 
-## 🛠️ Installation
+## 🖼️ Preview
 
-This script is intended to run as a content script inside a Chrome extension.
-
-1. Create a folder for your extension.
-2. Save the content script as `content.js`.
-3. Create a `manifest.json` (Manifest V3) with permissions for the target sites.
-4. Load the extension in Chrome: open `chrome://extensions/` → **Load unpacked** → select the folder.
-
-### Example `manifest.json`
-
-```json
-{
-  "manifest_version": 3,
-  "name": "AI Chat Cleaner",
-  "version": "1.0",
-  "permissions": ["activeTab", "scripting"],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://chatgpt.com/*",
-        "https://gemini.google.com/*",
-        "https://claude.ai/*",
-        "https://chat.deepseek.com/*"
-      ],
-      "js": ["content.js"]
-    }
-  ]
-}
-```
+> **[🎥 Watch Demo Video](посилання_на_відео_якщо_буде)**
 
 ---
 
-## 📖 Usage
+## 🚀 Key Features
 
-Navigate to the AI chat website you want to clean (for example `https://chatgpt.com`).
-
-Trigger the script by sending a message from your extension popup or background script.
-
-### Start cleaning
-
-Send this message to start:
-
-```javascript
-chrome.tabs.sendMessage(tabId, {
-  action: "start_cleaning",
-  safeZone: 0 // Number of top chats to skip (0 = delete everything)
-});
-```
-
-### Check status
-
-To check whether the script is running:
-
-```javascript
-chrome.tabs.sendMessage(tabId, { action: "check_status" });
-```
+* **🤖 Multi-Platform Support:** Works seamlessly with ChatGPT, Gemini, Claude, and DeepSeek.
+* **🛡️ Safe Zone:** A unique feature that allows you to preserve your 'N' most recent or important chats.
+* **🕵️ Human-Like Behavior:** Mimics real user clicks and scrolls with smart delays to avoid detection.
+- **⚡ No API Required:** Works directly in your browser UI. Your passwords and tokens are never shared.
+- **🎨 Modern Popup:** Simple and intuitive interface to control the cleaning process.
 
 ---
 
-## ⚙️ How it works
+## 🛠️ Technical Stack
 
-The script runs a loop while `isRunning` is true, detects the current hostname, and runs platform-specific deletion logic.
-
-1. ChatGPT
-   - Filters out navigation links (e.g., "Explore GPTs", "Upgrade Plan").
-   - Identifies chat links by `/c/` URL patterns.
-   - Opens context menu and selects "Delete".
-
-2. Google Gemini
-   - Locates the navigation container and finds "Recent" or "Chats".
-   - Handles mat-dialog confirmation modals used by Gemini.
-   - Includes retry logic for server synchronization delays.
-
-3. Claude AI
-   - Uses pointer events to simulate realistic user clicks (required for some React-based UIs).
-   - Navigates the sidebar items and confirms deletion via modals.
-
-4. DeepSeek
-   - Iterates sidebar links and handles the platform-specific dropdown menu structure.
+- **Core:** Vanilla JavaScript (ES6+)
+- **Automation:** DOM Manipulation & Event Simulation
+- **Platform:** Chrome Extension API (Manifest V3)
+- **Styling:** CSS3 (Custom UI for the popup)
 
 ---
 
-## ⚠️ Important Notes
+## 📥 How to Install (Chrome / Brave / Edge)
 
-- Safe Zone: `safeZone` determines how many top chats to skip. `0` deletes the first item; `1` skips the top item, etc.
-- DOM changes: AI platforms frequently update their UIs. If the script stops working, update CSS selectors in `content.js`.
-- Rate limiting: The script uses `sleep()` delays between actions to avoid crashes and reduce rate limiting risk.
+Since this is a custom automation tool, you can install it manually in 30 seconds:
+
+1. **Download** this repository as a ZIP file and extract it (or clone it).
+2. Open your browser and go to the Extensions page:
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+3. Toggle the **"Developer mode"** switch (usually in the top right corner).
+4. Click the **"Load unpacked"** button.
+5. Select the folder where you extracted the files.
+6. **Done!** You will see the 🧹 **AI Chat Mass Purger** icon in your toolbar.
+
+---
+
+## 📖 How to Use
+
+1. Navigate to your AI chat (ChatGPT, Gemini, etc.).
+2. Click on the extension icon.
+3. **Set Safe Zone:** Enter the number of recent chats you want to keep (e.g., `5`).
+4. Click **"Start Purge"**.
+5. The extension will automatically handle the deletion process. You can stop it at any time by closing the popup or refreshing the page.
+
+## 📦 Installation (Development Mode)
+
+1. Clone this repository:
+   ```bash
+   git clone [https://github.com/Gampadich/AI-cleaner.git](https://github.com/Gampadich/AI-cleaner.git)
+Open Chrome and navigate to chrome://extensions/.
+
+Enable "Developer mode" (top right).
+
+Click "Load unpacked" and select the project folder.
+
+Open your favorite AI chat and start cleaning!
+
+⚙️ How It Works
+The extension uses a smart Selector Engine that identifies the specific "Delete" and "Confirm" buttons for each platform. It runs a loop that:
+
+Detects the platform (ChatGPT/Gemini/etc.).
+
+Skips the number of chats defined in your Safe Zone.
+
+Simulates a series of clicks to perform the deletion.
+
+Handles confirmation modals automatically.
+
+👨‍💻 Author Designed & Developed by Gampadich
