@@ -347,15 +347,15 @@ async function deleteDeepSeek(safeZoneCount) {
   const allChats = document.querySelectorAll("a");
   console.log(`Found ${allChats.length} chats`);
 
-  const targetChat = allChats[safeZoneCount];
+  const targetChat = allChats[allChats.length -1];
 
-  if (!targetChat) return "LIMIT_REACHED";
+  if (allChats.length <= safeZoneCount) return "LIMIT_REACHED"
 
   targetChat.style.border = "3px solid red";
 
   targetChat.click();
 
-  await sleep(800);
+  await sleep(400);
 
   const allButtons = document.querySelectorAll(".ds-icon-button__hover-bg");
   const menuButton = allButtons[1];
@@ -367,7 +367,7 @@ async function deleteDeepSeek(safeZoneCount) {
     return console.log("Menu button not found");
   }
 
-  await sleep(800);
+  await sleep(400);
 
   const menuButtons = document.querySelectorAll(".ds-dropdown-menu-option");
   let deleteButton = null;
@@ -391,7 +391,7 @@ async function deleteDeepSeek(safeZoneCount) {
     return console.log("Delete button not found");
   }
 
-  await sleep(800);
+  await sleep(400);
 
   const confirmButtons = document.querySelectorAll("button");
   const confirmButton = confirmButtons[1];
@@ -403,6 +403,8 @@ async function deleteDeepSeek(safeZoneCount) {
     return console.log("Confirm button not found");
   }
 
+  await sleep(2000)
+
   return true;
 }
 
@@ -412,7 +414,7 @@ async function startMassDeletion(safeZoneCount) {
   console.log(`Start cleaner on: ${hostname}`);
 
   while (isRunning) {
-    let result = false;
+    let result = null;
 
     if (hostname.includes("chatgpt")) {
       result = await deleteChatGPT(safeZoneCount);
