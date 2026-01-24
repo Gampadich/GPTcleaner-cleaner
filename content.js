@@ -193,7 +193,41 @@ async function deleteGemini(safeZoneCount) {
 }
 
 async function deleteChatGPT(safeZoneCount) {
-  
+  const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  const menuBttons = document.querySelectorAll(
+    'button[class="__menu-item-trailing-btn"]',
+  );
+
+  const menuBtn = menuBttons[safeZoneCount]
+
+  if (!menuBtn) return "LIMIT_REACHED"
+
+  menuBtn.style.border = "3px solid red";
+  menuBtn.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  menuBtn.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+
+  await sleep(800);
+
+  const deleteMenuBtn = document.querySelector(
+    'div[data-testid="delete-chat-menu-item"]',
+  );
+
+  deleteMenuBtn.style.border = "3px solid red";
+  deleteMenuBtn.click();
+
+  await sleep(800);
+
+  const deleteBtn = document.querySelector(
+    'button[data-testid="delete-conversation-confirm-button"]',
+  );
+
+  deleteBtn.style.border = "3px solid green";
+  deleteBtn.click();
+
+  await sleep(400)
+
+  return true
 }
 
 async function deleteClaudeAI(safeZoneCount) {
@@ -201,7 +235,7 @@ async function deleteClaudeAI(safeZoneCount) {
 
   const menuBtns = document.querySelectorAll('button[aria-haspopup="menu"]');
 
-  const menuBtn = menuBtns[safeZoneCount]
+  const menuBtn = menuBtns[safeZoneCount];
 
   if (menuBtn) console.log("Founded menu button");
 
@@ -227,7 +261,7 @@ async function deleteClaudeAI(safeZoneCount) {
   deleteButton.style.border = "3px solid blue";
   deleteButton.click();
 
-  await sleep(400)
+  await sleep(400);
 
   return true;
 }
