@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function updateButtonState(isRunning) {
         if (isRunning) {
-            btn.textContent = '🛑 Stop Cleaning';
+            btn.textContent = 'Stop Cleaning';
             btn.style.backgroundColor = '#333';
         } else {
-            btn.textContent = '🗑️ Start Cleaning';
+            btn.textContent = 'Start Cleaning';
             btn.style.backgroundColor = '#ef4444';
         }
     }

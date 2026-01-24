@@ -186,6 +186,9 @@ async function deleteGemini(safeZoneCount) {
 
   console.log("Cant confirm.");
   target.style.display = "none";
+
+  await sleep(800);
+
   return true;
 }
 
@@ -218,7 +221,7 @@ async function deleteChatGPT(safeZoneCount) {
   softClick(targetChat);
   await sleep(300);
   const menuBtn = targetChat.querySelector(
-    'button, [role="button"], [aria-haspopup="menu"]'
+    'button, [role="button"], [aria-haspopup="menu"]',
   );
   if (!menuBtn) {
     targetChat.style.display = "none";
@@ -250,7 +253,7 @@ async function deleteChatGPT(safeZoneCount) {
 
   await sleep(600);
   const confirmBtn = document.querySelector(
-    '[data-testid="delete-conversation-confirm-button"]'
+    '[data-testid="delete-conversation-confirm-button"]',
   );
   if (confirmBtn) {
     hardClick(confirmBtn);
@@ -261,84 +264,39 @@ async function deleteChatGPT(safeZoneCount) {
 }
 
 async function deleteClaudeAI(safeZoneCount) {
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-  const allChats = document.querySelectorAll(
-    '[data-dd-action-name="sidebar-chat-item"]'
+  const menuBtns = document.querySelectorAll('button[aria-haspopup="menu"]');
+
+  const menuBtn = menuBtns[safeZoneCount]
+
+  if (menuBtn) console.log("Founded menu button");
+
+  menuBtn.style.border = "3px solid red";
+  menuBtn.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+  menuBtn.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+
+  await sleep(400);
+
+  const firstDeleteButton = document.querySelector(
+    'div[data-testid="delete-chat-trigger"]',
   );
-  const targetChat = allChats[safeZoneCount];
 
-  if (!targetChat) {
-    return "LIMIT_REACHED";
-  } else {
-    console.log("👉 Вибираю чат...");
-    targetChat.click();
-    await sleep(800);
+  firstDeleteButton.style.border = "3px solid red";
+  firstDeleteButton.click();
 
-    const menuButton = document.querySelector('button[aria-haspopup="menu"]');
+  await sleep(400);
 
-    if (menuButton) {
-      console.log("Found menu button, executing SUPER CLICK...");
-      menuButton.style.border = "3px solid red";
+  const deleteButton = document.querySelector(
+    'button[data-testid="delete-modal-confirm"]',
+  );
 
-      menuButton.focus();
+  deleteButton.style.border = "3px solid blue";
+  deleteButton.click();
 
-      const rect = menuButton.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
+  await sleep(400)
 
-      const opts = {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        clientX: x,
-        clientY: y,
-        buttons: 1,
-      };
-
-      menuButton.dispatchEvent(new PointerEvent("pointerdown", opts));
-      menuButton.dispatchEvent(new MouseEvent("mousedown", opts));
-      menuButton.dispatchEvent(new PointerEvent("pointerup", opts));
-      menuButton.dispatchEvent(new MouseEvent("mouseup", opts));
-      menuButton.dispatchEvent(new MouseEvent("click", opts));
-
-      console.log("Click dispatched!");
-    } else {
-      console.error("Button not found");
-      return;
-    }
-
-    await sleep(800);
-
-    const deleteButton = document.querySelector(
-      'div[data-testid="delete-chat-trigger"]'
-    );
-
-    if (deleteButton) {
-      console.log("Found delete button, clicking it...");
-      deleteButton.style.border = "3px solid red";
-      deleteButton.click();
-      console.log("Succesfull");
-    } else {
-      console.log("Delete button not found");
-    }
-
-    await sleep(800);
-
-    const deleteConfirmButton = document.querySelector(
-      'button[data-testid="delete-modal-confirm"]'
-    );
-
-    if (deleteConfirmButton) {
-      console.log("Found delete confirm button, clicking it...");
-      deleteConfirmButton.style.border = "3px solid red";
-      deleteConfirmButton.click();
-      console.log("Succesfully delete chat!");
-    } else {
-      console.log("Delete confirm button not found");
-    }
-    return true;
-  }
+  return true;
 }
 
 async function deleteDeepSeek(safeZoneCount) {
@@ -347,9 +305,9 @@ async function deleteDeepSeek(safeZoneCount) {
   const allChats = document.querySelectorAll("a");
   console.log(`Found ${allChats.length} chats`);
 
-  const targetChat = allChats[allChats.length -1];
+  const targetChat = allChats[safeZoneCount];
 
-  if (allChats.length <= safeZoneCount) return "LIMIT_REACHED"
+  if (allChats.length <= safeZoneCount) return "LIMIT_REACHED";
 
   targetChat.style.border = "3px solid red";
 
@@ -403,7 +361,7 @@ async function deleteDeepSeek(safeZoneCount) {
     return console.log("Confirm button not found");
   }
 
-  await sleep(2000)
+  await sleep(2000);
 
   return true;
 }
