@@ -193,74 +193,7 @@ async function deleteGemini(safeZoneCount) {
 }
 
 async function deleteChatGPT(safeZoneCount) {
-  const allLinks = document.querySelectorAll("nav a");
-  const bannedWords = [
-    "new chat",
-    "search",
-    "explore",
-    "images",
-    "apps",
-    "projects",
-    "upgrade",
-    "plan",
-    "gpts",
-  ];
-  const chatLinks = Array.from(allLinks).filter((link) => {
-    if (link.offsetParent === null) return false;
-    const text = link.innerText.toLowerCase().trim();
-    const href = link.getAttribute("href") || "";
-    const isBanned = bannedWords.some((word) => text.includes(word));
-    return (href.includes("/c/") || text.length > 2) && !isBanned;
-  });
-
-  if (chatLinks.length <= safeZoneCount) return "LIMIT_REACHED";
-  const targetChat = chatLinks[safeZoneCount];
-  targetChat.scrollIntoView({ block: "center", behavior: "instant" });
-  targetChat.style.border = "3px solid #10a37f";
-
-  softClick(targetChat);
-  await sleep(300);
-  const menuBtn = targetChat.querySelector(
-    'button, [role="button"], [aria-haspopup="menu"]',
-  );
-  if (!menuBtn) {
-    targetChat.style.display = "none";
-    return true;
-  }
-
-  softClick(menuBtn);
-  await sleep(600);
-
-  let deleteBtn = null;
-  const items = document.querySelectorAll('[role="menuitem"]');
-  for (let item of items) {
-    if (
-      item.innerText.toLowerCase().includes("delete") ||
-      item.innerText.toLowerCase().includes("видалити")
-    ) {
-      deleteBtn = item;
-      break;
-    }
-  }
-
-  if (deleteBtn) {
-    softClick(deleteBtn);
-  } else {
-    document.body.click();
-    targetChat.style.display = "none";
-    return true;
-  }
-
-  await sleep(600);
-  const confirmBtn = document.querySelector(
-    '[data-testid="delete-conversation-confirm-button"]',
-  );
-  if (confirmBtn) {
-    hardClick(confirmBtn);
-    await sleep(1000);
-    return true;
-  }
-  return false;
+  
 }
 
 async function deleteClaudeAI(safeZoneCount) {
